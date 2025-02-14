@@ -7,6 +7,7 @@ namespace DungeonCrawlers.Agent
     #region Enums
 
     public enum FiniteStates
+    //Se utilizara para el BaseLayer de mi Animator para las transicciones de las animaciones de mi personaje 
     {
         IDLE,
         MOVING,
@@ -14,7 +15,8 @@ namespace DungeonCrawlers.Agent
         DEATH
     }
 
-    public enum StateMechanics //bool parameters from the animator
+    public enum StateMechanics
+    //bool parameters from the animator
     {
         STOP,
         MOVE,
@@ -23,6 +25,7 @@ namespace DungeonCrawlers.Agent
     }
 
     public enum StateDirection
+    // esto se usara para un metodo para decirle que posicion tomara la animacion cuando se aprete un boton del input del jugador e indicarle en que Pos debe estar 
     {
         DOWN, //0
         UP,   //1
@@ -36,6 +39,7 @@ namespace DungeonCrawlers.Agent
 
     [System.Serializable]
     public struct DirectionAnimatorControllers
+    // cuando este en runtime el AnimatorController sabra como debe representar la animacion cuando el usuario aprete un boton de direccion 
     {
         [SerializeField] public RuntimeAnimatorController up;
         [SerializeField] public RuntimeAnimatorController down;
@@ -51,6 +55,7 @@ namespace DungeonCrawlers.Agent
         #region Parameters
 
         [SerializeField] public DirectionAnimatorControllers directionAnimatorControllers;
+        //parametrizo el fsm de mi animatorcontroller 
 
         #endregion
 
@@ -58,12 +63,13 @@ namespace DungeonCrawlers.Agent
 
         [SerializeField] protected Animator _animator;
 
+
         #endregion
 
         #region RuntimeVariables
 
         [SerializeField] protected FiniteStates _currentFiniteState;
-        [SerializeField] protected StateDirection _currentStateDirection; //= StateDirection.DOWN;
+        [SerializeField] protected StateDirection _currentStateDirection; //= StateDirection.DOWN; 
 
         #endregion
 
@@ -71,17 +77,21 @@ namespace DungeonCrawlers.Agent
 
         public void EnteredStateFromStateMachineBehaviour(FiniteStates value)
         {
+            //cuando me este moviendo y lo deje de hacer se llamara el metodo que me reiniciara o
+            //limpiara las animaciones y se buscara la siguiente animacion cuando el usuario haga otra cosa por medio del Input 
             CleanAnimatorFlagParameters();
             _currentFiniteState = value;
         }
 
         public void StateMechanic(StateMechanics value)
         {
+            //me definira por un bool si se activa una accion de las animaciones en respuesta de la logica del juego por medio del input del jugador 
             _animator.SetBool(value.ToString(), true);
         }
 
         public void StateMechanic(StateMechanics stateMechanic, StateDirection direction)
         {
+            // controla el fsm del jugador y con u bool definira si el jugador aprieta un input y depediendo de la direccion se ejecutara tal animacion 
             StateMechanic(stateMechanic);
             _currentStateDirection = direction;
             switch (direction)
@@ -107,6 +117,7 @@ namespace DungeonCrawlers.Agent
 
         protected void CleanAnimatorFlagParameters()
         {
+            // itinera y pregunta por medio de un bool por medio de un enum el animator para luego reiniciarlo 
             foreach (StateMechanics stateMechanic in (StateMechanics[])Enum.GetValues(typeof(StateMechanics)))
             {
                 _animator.SetBool(stateMechanic.ToString(), false);

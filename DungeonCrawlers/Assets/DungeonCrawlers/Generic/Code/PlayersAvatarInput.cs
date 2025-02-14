@@ -28,6 +28,7 @@ namespace DungeonCrawlers.Agent
 
         public void OnMove(InputAction.CallbackContext value)
         {
+            // es para moverme por medio del inputSystem
             if (value.performed)
             {
                 _fsm.StateMechanic(StateMechanics.MOVE, GetStateDirection(value.ReadValue<Vector2>()));
@@ -78,7 +79,7 @@ namespace DungeonCrawlers.Agent
             }
             //else if (Vector2.Dot(Vector2.up, value) >= 0.5f)
             //{
-                return StateDirection.UP;
+            return StateDirection.UP;
             //}
         }
 
